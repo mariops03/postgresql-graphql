@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.productsQuery = exports.ProductType = void 0;
+exports.CreateProduct = exports.productsQuery = exports.ProductType = void 0;
 const nexus_1 = require("nexus");
 exports.ProductType = (0, nexus_1.objectType)({
     name: "Product",
@@ -48,7 +48,30 @@ exports.productsQuery = (0, nexus_1.extendType)({
     definition(t) {
         t.nonNull.list.nonNull.field("products", {
             type: "Product",
-            resolve: () => products
+            resolve: (_parent, _args, _context, _info) => products
         });
     }
+});
+exports.CreateProduct = (0, nexus_1.extendType)({
+    type: "Mutation",
+    definition(t) {
+        t.nonNull.field("createProduct", {
+            type: "Product",
+            args: {
+                name: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()),
+                description: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()),
+                price: (0, nexus_1.nonNull)((0, nexus_1.floatArg)())
+            },
+            resolve: (_parent, args, _context, _info) => {
+                const newProduct = {
+                    id: products.length + 1,
+                    name: args.name,
+                    description: args.description,
+                    price: args.price
+                };
+                products.push(newProduct);
+                return newProduct;
+            }
+        });
+    },
 });

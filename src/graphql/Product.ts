@@ -1,5 +1,6 @@
 import { extendType, floatArg, nonNull, objectType, stringArg } from "nexus";
 import { NexusGenObjects } from "../../nexus-typegen";
+import { Product } from "../entities/Product";
 
 export const ProductType = objectType({
     name: "Product",
@@ -11,45 +12,16 @@ export const ProductType = objectType({
     }
     });
 
-let products:NexusGenObjects["Product"][] = [
-    {
-        id: 1,
-        name: "Product 1",
-        description: "Description of product 1",
-        price: 100.0
-    },
-    {
-        id: 2,
-        name: "Product 2",
-        description: "Description of product 2",
-        price: 200.0
-    },
-    {
-        id: 3,
-        name: "Product 3",
-        description: "Description of product 3",
-        price: 300.0
-    },
-    {
-        id: 4,
-        name: "Product 4",
-        description: "Description of product 4",
-        price: 400.0
-    },
-    {
-        id: 5,
-        name: "Product 5",
-        description: "Description of product 5",
-        price: 500.0
-    }
-];
+
 
 export const productsQuery = extendType({
     type: "Query",
     definition(t) {
         t.nonNull.list.nonNull.field("products", {
             type: "Product",
-            resolve: (_parent,_args,_context,_info) => products
+            resolve: (_parent,_args,_context,_info) : Promise<Product[]> => {
+                return Product.find();
+            }
         });
     }
 });
@@ -64,15 +36,9 @@ export const CreateProduct = extendType({
                 description: nonNull(stringArg()),
                 price: nonNull(floatArg())
             },
-            resolve: (_parent, args, _context, _info) => {
-                const newProduct = {
-                    id: products.length + 1,
-                    name: args.name,
-                    description: args.description,
-                    price: args.price
-                };
-                products.push(newProduct);
-                return newProduct;
+            resolve: (_parent, args, _context, _info) : Promise<Product> => {
+                const {name, description, price} = args;
+                return Product.create({name, description, price}).save();
             }
         })
     },

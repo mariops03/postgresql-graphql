@@ -20,7 +20,7 @@ const boot = () => __awaiter(void 0, void 0, void 0, function* () {
     const server = new apollo_server_1.ApolloServer({
         schema: schema_1.schema
     });
-    server.listen().then(({ url }) => {
+    server.listen({ port: 3000 }).then(({ url }) => {
         console.log(`🚀 Server ready at ${url}`);
     });
 });

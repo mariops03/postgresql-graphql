@@ -16,9 +16,10 @@ const apollo_server_1 = require("apollo-server");
 const schema_1 = require("./schema");
 const typeorm_config_1 = __importDefault(require("./typeorm.config"));
 const boot = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield typeorm_config_1.default.initialize();
+    const connection = yield typeorm_config_1.default.initialize();
     const server = new apollo_server_1.ApolloServer({
-        schema: schema_1.schema
+        schema: schema_1.schema,
+        context: () => ({ connection })
     });
     server.listen({ port: 3000 }).then(({ url }) => {
         console.log(`🚀 Server ready at ${url}`);

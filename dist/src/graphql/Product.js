@@ -17,8 +17,9 @@ exports.productsQuery = (0, nexus_1.extendType)({
     definition(t) {
         t.nonNull.list.nonNull.field("products", {
             type: "Product",
-            resolve: (_parent, _args, _context, _info) => {
-                return Product_1.Product.find();
+            resolve: (_parent, _args, context, _info) => {
+                const { connection } = context;
+                return connection.query("SELECT * FROM product");
             }
         });
     }

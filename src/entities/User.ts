@@ -1,4 +1,6 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+
+import { Product } from './Product';
 
 @Entity()
 export class User extends BaseEntity {
@@ -13,6 +15,9 @@ export class User extends BaseEntity {
 
     @Column()
     email!: string;
+
+    @OneToMany( () => Product, (product) => product.creator)
+    products!: Product[] | undefined;
 
     @CreateDateColumn()
     createdAt!: Date;

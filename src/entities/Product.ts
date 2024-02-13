@@ -1,4 +1,5 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
+import { User } from './User';
 
 @Entity()
 export class Product extends BaseEntity {
@@ -13,6 +14,12 @@ export class Product extends BaseEntity {
 
     @Column()
     description!: string;
+
+    @Column()
+    creatorId!: number;
+
+    @ManyToOne(() => User, (user) => user.products)
+    creator!: User;
 
     @CreateDateColumn()
     createdAt!: Date;

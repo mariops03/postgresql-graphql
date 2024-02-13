@@ -70,7 +70,7 @@ exports.AuthMutation = (0, nexus_1.extendType)({
                 if (!valid) {
                     throw new Error("Invalid login");
                 }
-                const token = jwt.sign({ userId: user.id, username: user.username }, process.env.JWT_TOKEN, {
+                const token = jwt.sign({ userId: user.id }, process.env.JWT_TOKEN, {
                     expiresIn: "30m",
                 });
                 return {
@@ -102,7 +102,7 @@ exports.AuthMutation = (0, nexus_1.extendType)({
                         .returning("*")
                         .execute();
                     const newUser = result.raw[0];
-                    const token = jwt.sign({ userId: newUser.id, username: newUser.username }, process.env.JWT_TOKEN, {
+                    const token = jwt.sign({ userId: newUser.id }, process.env.JWT_TOKEN, {
                         expiresIn: "30m",
                     });
                     return {

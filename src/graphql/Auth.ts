@@ -36,7 +36,7 @@ export const AuthMutation = extendType({
             throw new Error("Invalid login");
           }
           const token = jwt.sign(
-            { userId: user.id, username: user.username },
+            { userId: user.id },
             process.env.JWT_TOKEN as jwt.Secret,
             {
               expiresIn: "30m",
@@ -75,7 +75,7 @@ export const AuthMutation = extendType({
             const newUser = result.raw[0];
 
             const token = jwt.sign(
-                { userId: newUser.id, username: newUser.username },
+                { userId: newUser.id },
                 process.env.JWT_TOKEN as jwt.Secret,
                 {
                     expiresIn: "30m",

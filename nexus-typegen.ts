@@ -34,6 +34,7 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   Product: { // root type
+    creatorId: number; // Int!
     description: string; // String!
     id: number; // Int!
     name: string; // String!
@@ -69,6 +70,8 @@ export interface NexusGenFieldTypes {
     register: NexusGenRootTypes['Auth']; // Auth!
   }
   Product: { // field return type
+    creator: NexusGenRootTypes['User'] | null; // User
+    creatorId: number; // Int!
     description: string; // String!
     id: number; // Int!
     name: string; // String!
@@ -96,6 +99,8 @@ export interface NexusGenFieldTypeNames {
     register: 'Auth'
   }
   Product: { // field return type name
+    creator: 'User'
+    creatorId: 'Int'
     description: 'String'
     id: 'Int'
     name: 'String'

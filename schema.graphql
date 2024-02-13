@@ -14,6 +14,8 @@ type Mutation {
 }
 
 type Product {
+  creator: User
+  creatorId: Int!
   description: String!
   id: Int!
   name: String!

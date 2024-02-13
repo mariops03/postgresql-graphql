@@ -52,6 +52,33 @@ exports.AuthType = (0, nexus_1.objectType)({
 exports.AuthMutation = (0, nexus_1.extendType)({
     type: "Mutation",
     definition(t) {
+        t.nonNull.field("login", {
+            type: "Auth",
+            args: {
+                username: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()),
+                password: (0, nexus_1.nonNull)((0, nexus_1.stringArg)()),
+            },
+            resolve: (_parent, args, context, _info) => __awaiter(this, void 0, void 0, function* () {
+                const { username, password } = args;
+                const user = yield context.connection.getRepository(User_1.User).findOne({
+                    where: { username },
+                });
+                if (!user) {
+                    throw new Error("Invalid login");
+                }
+                const valid = yield argon2_1.default.verify(user.password, password);
+                if (!valid) {
+                    throw new Error("Invalid login");
+                }
+                const token = jwt.sign({ userId: user.id, username: user.username }, process.env.JWT_TOKEN, {
+                    expiresIn: "30m",
+                });
+                return {
+                    user,
+                    token,
+                };
+            }),
+        });
         t.nonNull.field("register", {
             type: "Auth",
             args: {

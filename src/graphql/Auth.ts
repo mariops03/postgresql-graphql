@@ -17,6 +17,37 @@ export const AuthType = objectType({
 export const AuthMutation = extendType({
     type: "Mutation",
     definition(t) {
+      t.nonNull.field("login", {
+        type: "Auth",
+        args: {
+          username: nonNull(stringArg()),
+          password: nonNull(stringArg()),
+        },
+        resolve: async (_parent, args, context: Context, _info) => {
+          const { username, password } = args;
+          const user = await context.connection.getRepository(User).findOne({
+            where: { username },
+          });
+          if (!user) {
+            throw new Error("Invalid login");
+          }
+          const valid = await argon2.verify(user.password, password);
+          if (!valid) {
+            throw new Error("Invalid login");
+          }
+          const token = jwt.sign(
+            { userId: user.id, username: user.username },
+            process.env.JWT_TOKEN as jwt.Secret,
+            {
+              expiresIn: "30m",
+            }
+          );
+          return {
+            user,
+            token,
+          };
+        },
+      });
     t.nonNull.field("register", {
       type: "Auth",
       args: {
